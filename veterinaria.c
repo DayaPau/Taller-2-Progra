@@ -1,10 +1,9 @@
 #include <stdio.h>
 
 void ingresarMascota(float *IDMas, char *nombre, char *tipo, char *nombredueño, float *edad);
-void mostrarServicios(char IDs[][9]);
-void facturarServicio(float IDMas, int servicioElegido, char IDs[][9]);
+void mostrarServicios(char IDs[][9], float precios[]);
+void facturarServicio(float IDMas, char IDs[][9], float precios[]);
 
-// Declaración e inicialización del arreglo IDs
 char IDs[5][9] = {
     "ABC12345",
     "DEF67890",
@@ -18,6 +17,7 @@ int main() {
     float IDMas;
     char nombre[20], tipo[10], nombredueño[20];
     float edad;
+    float precios[5] = {15.0, 25.0, 10.0, 30.0, 20.0};  
 
     do {
         printf("===== MENÚ =====\n");
@@ -33,15 +33,10 @@ int main() {
                 ingresarMascota(&IDMas, nombre, tipo, nombredueño, &edad);
                 break;
             case 2:
-                mostrarServicios(IDs);
+                mostrarServicios(IDs, precios);
                 break;
             case 3:
-                {
-                    int servicioElegido;
-                    printf("Ingrese el número de servicio a facturar: ");
-                    scanf("%d", &servicioElegido);
-                    facturarServicio(IDMas, servicioElegido, IDs);
-                }
+                facturarServicio(IDMas, IDs, precios);
                 break;
             case 0:
                 printf("Saliendo del programa...\n");
@@ -73,7 +68,7 @@ void ingresarMascota(float *IDMas, char *nombre, char *tipo, char *nombredueño,
     scanf(" %[^\n]", nombredueño);
 }
 
-void mostrarServicios(char IDs[][9]) {
+void mostrarServicios(char IDs[][9], float precios[]) {
     char nombres[5][50] = {
         "1. Vacunación",
         "2. Esterilización",
@@ -90,8 +85,6 @@ void mostrarServicios(char IDs[][9]) {
         "5. Revisión exhaustiva del estado general de salud de la mascota."
     };
 
-    float precios[5] = {15.0, 25.0, 10.0, 30.0, 20.0};
-
     printf("Servicios disponibles:\n");
     for (int i = 0; i < 5; i++) {
         printf("%s\n", nombres[i]);
@@ -102,18 +95,37 @@ void mostrarServicios(char IDs[][9]) {
     }
 }
 
-void facturarServicio(float IDMas, int servicioElegido, char IDs[][9]) {
-    float precios[5] = {15.0, 25.0, 10.0, 30.0, 20.0};
+void facturarServicio(float IDMas, char IDs[][9], float precios[]) {
+    int servicioElegido;
+    float precioTotal = 0;
+    char opcion;
 
     printf("Factura de servicios:\n");
     printf("ID de la mascota: %.0f\n", IDMas);
 
-    if (servicioElegido < 1 || servicioElegido > 5) {
-        printf("Número de servicio inválido. Debe seleccionar un número de servicio válido.\n");
-        return;
-    }
 
-    int index = servicioElegido - 1;
-    printf("ID del servicio: %s\n", IDs[index]);
-    printf("Precio total: $%.2f\n", precios[index]);
+    do {
+        printf("Ingrese el número de servicio a facturar: ");
+        scanf("%d", &servicioElegido);
+
+        if (servicioElegido < 1 || servicioElegido > 5) {
+            printf("Número de servicio inválido. Debe seleccionar un número de servicio válido.\n");
+            continue;  
+        }
+
+        int index = servicioElegido - 1;
+        printf("ID del servicio: %s\n", IDs[index]);
+        printf("Precio: $%.2f\n", precios[index]);
+
+        precioTotal += precios[index];
+
+        printf("Desea facturar otro servicio? (S/N): ");
+        scanf(" %c", &opcion);
+    } while (opcion == 'S' || opcion == 's');
+
+    printf("Precio total: $%.2f\n", precioTotal);
 }
+
+
+
+
