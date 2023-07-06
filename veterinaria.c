@@ -12,6 +12,7 @@ char IDs[5][9] = {
     "MNO13579"
 };
 
+
 int main() {
     int opcion;
     float IDMas;
@@ -52,7 +53,7 @@ int main() {
 
 void ingresarMascota(float *IDMas, char *nombre, char *tipo, char *nombredueño, float *edad) {
     printf("Has seleccionado la opción: Ingreso Mascota\n");
-    printf("Ingrese el ID de 8 dígitos de su mascota: ");
+    printf("Ingrese el ID de su mascota: ");
     scanf("%f", IDMas);
 
     printf("Ingrese el nombre de su mascota: ");
@@ -99,9 +100,17 @@ void facturarServicio(float IDMas, char IDs[][9], float precios[]) {
     int servicioElegido;
     float precioTotal = 0;
     char opcion;
+    char serviciosFacturados[5][9]; 
+    float preciosFacturados[5]; 
+    int numServiciosFacturados = 0; 
+    char nombres[5][50] = {
+        "1. Vacunación",
+        "2. Esterilización",
+        "3. Desparasitación",
+        "4. Corte de pelo",
+        "5. Control de salud"
+    };
 
-    printf("Factura de servicios:\n");
-    printf("ID de la mascota: %.0f\n", IDMas);
 
 
     do {
@@ -110,22 +119,39 @@ void facturarServicio(float IDMas, char IDs[][9], float precios[]) {
 
         if (servicioElegido < 1 || servicioElegido > 5) {
             printf("Número de servicio inválido. Debe seleccionar un número de servicio válido.\n");
-            continue;  
+            continue;
         }
 
         int index = servicioElegido - 1;
         printf("ID del servicio: %s\n", IDs[index]);
         printf("Precio: $%.2f\n", precios[index]);
 
-        precioTotal += precios[index];
+       
+        for (int i = 0; i < 9; i++) {
+            serviciosFacturados[numServiciosFacturados][i] = IDs[index][i];
+        }
+        preciosFacturados[numServiciosFacturados] = precios[index];
+        numServiciosFacturados++;
 
-        printf("Desea facturar otro servicio? (S/N): ");
+        precioTotal += precios[index];
+        
+
+        printf("Desea fa1cturar otro servicio? (S/N): ");
         scanf(" %c", &opcion);
     } while (opcion == 'S' || opcion == 's');
 
+    printf("Factura de servicios:\n");
+    printf("ID de la mascota: %.0f\n", IDMas);
+
+    printf("Servicios facturados:\n");
+    for (int i = 0; i < numServiciosFacturados; i++) {
+        printf("ID: %s\n", serviciosFacturados[i]);
+        printf("Nombre del servicio: %s\n",nombres[i] );
+        printf("Precio: $%.2f\n", preciosFacturados[i]);
+        printf("\n");
+    }
     printf("Precio total: $%.2f\n", precioTotal);
 }
-
 
 
 
